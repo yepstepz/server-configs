@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+
+  #  Webmentions app
+  wmapp:
+    build:
+      context: .
+      dockerfile: ./configs/wm/Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./configs/wm/.env
+    environment:
+      DATABASE_URL: ${WM_DATABASE_URL}
+    depends_on:
+      - wmdb
+    restart: always
+
+  # Postgress for webmentions
+  wmdb:
+    image: postgres:15
+    env_file:
+      - ./configs/wm/.env
+    environment:
+      POSTGRES_USER: ${WM_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${WM_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${WM_POSTGRES_DB}
+    volumes:
+      - wm-db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+
+volumes:
+  wm-db-data:
