@@ -4,10 +4,8 @@ FROM oven/bun:latest
 # Set the working directory
 WORKDIR /app
 
-ARG PROJECT_PATH
-
 # Copy the application code into the image
-COPY ${PROJECT_PATH} /app
+COPY webmentions-server /app
 
 # Install dependencies
 RUN bun install --production
