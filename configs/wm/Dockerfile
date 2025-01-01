@@ -4,8 +4,10 @@ FROM oven/bun:latest
 # Set the working directory
 WORKDIR /app
 
+ARG PROJECT_PATH
+
 # Copy the application code into the image
-COPY . /app
+COPY ${PROJECT_PATH} /app
 
 # Install dependencies
 RUN bun install --production
