@@ -13,6 +13,15 @@ services:
     depends_on:
       - wmdb
     restart: always
+    command: >
+      bash -lc '
+        until (echo > /dev/tcp/wmdb/5432) >/dev/null 2>&1; do
+          echo "waiting for db";
+          sleep 1;
+        done;
+        bun run prisma db push;
+        bun run src/server/index.js
+      '
 
   # Postgress for webmentions
   wmdb:
@@ -21,8 +30,6 @@ services:
       - configs/wm/.env
     volumes:
       - wm-db-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     restart: always
 
 volumes:

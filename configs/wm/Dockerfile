@@ -14,8 +14,6 @@ RUN bun install --production
 # EXPOSE 3000
 
 # Deal with Prisma
-RUN bun run prisma db push
-RUN bun run prisma db pull
 RUN bun run prisma generate
 
 # Command to start the application
