@@ -1,20 +1,20 @@
-# Use the official Bun image
-FROM oven/bun:latest
+FROM oven/bun:1.3.6
 
-# Set the working directory
 WORKDIR /app
 
-# Copy the application code into the image
-COPY webmentions-server /app
+# 1) Copy only dependency manifests first (better layer caching)
+COPY webmentions-server/package.json ./package.json
+# bun.lockb may or may not exist; keep the wildcard pattern
+COPY webmentions-server/bun.lockb* ./
 
-# Install dependencies
-RUN bun install --production
+# 2) Install production dependencies
+RUN bun install --production --frozen-lockfile
 
-# Expose the port your server runs on
-# EXPOSE 3000
+# 3) Copy the rest of the app
+COPY webmentions-server/ ./
 
-# Deal with Prisma
+# 4) Prisma client generation (expects prisma to be runnable via `bun run prisma`)
 RUN bun run prisma generate
 
-# Command to start the application
+# 5) Run the server
 CMD ["bun", "run", "src/server/index.js"]
