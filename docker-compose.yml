@@ -25,12 +25,12 @@ services:
 
   # Postgress for webmentions
   wmdb:
-    image: postgres:15
+    image: postgres:17.2
     env_file:
       - configs/wm/.env
     volumes:
-      - wm-db-data:/var/lib/postgresql/data
+      - wm-db-data-17:/var/lib/postgresql/data
     restart: always
 
 volumes:
-  wm-db-data:
+  wm-db-data-17:
